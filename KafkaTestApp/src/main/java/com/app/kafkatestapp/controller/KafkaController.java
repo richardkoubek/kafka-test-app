@@ -1,6 +1,8 @@
 package com.app.kafkatestapp.controller;
 
+import com.app.kafkatestapp.consumer.KafkaConsumer;
 import com.app.kafkatestapp.msgs.KafkaMsg;
+import com.app.kafkatestapp.msgs.KafkaReturnMsg;
 import com.app.kafkatestapp.producer.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class KafkaController {
 
     private final KafkaProducer kafkaProducer;
+    private final KafkaConsumer kafkaConsumer;
 
     @PostMapping("/write")
-    public void writeMessage(@RequestBody KafkaMsg message) {
+    public KafkaReturnMsg writeMessage(@RequestBody KafkaMsg message) {
         kafkaProducer.sendMessage(message);
+        return kafkaConsumer.getMessage(message.toString());
     }
 }
